@@ -24,3 +24,10 @@
   * by modular arithmetic rule: (a^b mod k)^c <==> a^bc mod k <==> (a^c mod k)^b mod k
   * This rule means, its not important which function you use first. The result will be remain same. This is a very useful property.
   * so, f( f(m) ) =(m^e mod n)^d mod n == m^ed mod n.
+
+## a simple client-server programs to communicate over internet securely by RSA
+  * run on terminal : `python3 server.py`
+  * run on terminal2: `python3 cli.py`
+  * Send and receive messages between server and client.
+  * NOTE: Only use ascii characters for now. Other characters cause undesired/broken behavior of program.
+  * [x] ISSUE: Sending and receiving public keys sometimes cause programs to suspend. Its cause the sendall methods work principle. sendall method can not send all data at a time, it re-sends the remaining data. On client side, client reads re-send data as second number of public key. Thus, seerver hangs on handshake phase. This breaks handshake phases.
