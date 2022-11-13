@@ -17,18 +17,19 @@ def RSA(p1,p2):
     n=p*q
     z=(p-1)*(q-1)
 
-    #select an e that relatively prime with z
+    #select an e that 1<e<phi(n) relatively prime with z
+    #e not a factor of n phi(n)=z
     e=None
-    for a in range(n-1,1,-1):
+    for a in range(z-1,1,-1):
         if is_relatively_prime(a,z):
             e=a
-            break;
-
-    d=1
+            
     #choose d such that (e*d)-1 mod z == 0
-    while ( (e*d)%z!=1 ):
+    #or d=1+(k*e*z) | d=e-1 % z
+    d=1
+    while (e*d)%z!=1:
         d+=1
-        
+
     #n,e is public key to encrypt
     #n,d is private key to decrypt
     PRIVATE_KEY=(n,d)
@@ -70,29 +71,29 @@ def prime_find(r2,r1=2):
 
     return x
 
-def encrypt(message,key:tuple):
+def encrypt(message:list,key:tuple):
     "message^e mod n formula ciphers the ascii message"
 
-    ciphered=""
+    ciphered=[]
     for a in message:
-        ciphered+= chr( ord(a)**key[1] % key[0] )
+        ciphered.append( a**key[1] % key[0] )
         
     return ciphered
 
-def decrypt(message,key:tuple):
+def decrypt(message:list,key:tuple):
     "as c represents encrypted_message: c^d mod n formula decyphers the message by ascii table"
 
-    deciphered=""
+    deciphered=[]
     for a in message:
-        deciphered+= chr( ord(a)**key[1] % key[0] )
+        deciphered.append( a**key[1] % key[0] )
         
     return deciphered
 
 
 #init-declare required vals and functions
-P_NUMS=prime_find(50)
-r1=P_NUMS[ randint(0, len(P_NUMS)-1 ) ]
-r2=P_NUMS[ randint(0, len(P_NUMS)-1 ) ]
+P_NUMS=prime_find(220)[20:] #if not choose big primes, function wont work properly
+r1=P_NUMS.pop( randint(0,len(P_NUMS)-1 ) )#[ randint(0, len(P_NUMS)-1 ) ]
+r2=P_NUMS.pop( randint(0,len(P_NUMS)-1 ) )#[ randint(0, len(P_NUMS)-1 ) ]
 RSA(r1,r2)#create public and private keys from prime nums
 
 if __name__=="__main__":
@@ -100,7 +101,9 @@ if __name__=="__main__":
     print("public key:",PUBLIC_KEY)
     print("private key:",PRIVATE_KEY)
 
-    message="this is an example message to send over internet"
+    message=bytearray("this is an example message to send over internet","utf-8")
+    
     ciphered=encrypt(message,PUBLIC_KEY)
-    print("ciphered message with public key:", ciphered )
-    print("deciphered message with private key:", decrypt(ciphered,PRIVATE_KEY) )
+    print("ciphered message with public key:", [chr(c) for c in ciphered] )
+    deciphered=decrypt(ciphered,PRIVATE_KEY)
+    print("deciphered message with private key:", [chr(c) for c in deciphered]  )
