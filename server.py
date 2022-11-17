@@ -2,7 +2,7 @@ import socket
 from threading import Thread
 from RSA import *
 from utils import *
-
+"""Halil Ibrahim MUT"""
 
 server="127.0.0.1"#communication end, ip of your ethernet or wifi-card.
 port=65001      #listen port of ip,which port you waiting for other end
@@ -48,17 +48,29 @@ def sender(conn, SRV_KEY):
             exit(0)
 
 def srv_handshake(conn):
-    #send your public key to other end, turn integers to bytes
-    conn.sendall( (PUBLIC_KEY[0]).to_bytes(2,"big") )
-    conn.sendall( (PUBLIC_KEY[1]).to_bytes(2,"big") )
+    #fitst,send your public key to other end, turn integers to bytes
+    data=[x for x in PUBLIC_KEY]
+    data=bytearray_from_hex( int_to_hex(data) )
     
-    #wait for other end to send its key
-    p1=conn.recv(1024)
-    p2=conn.recv(1024)
-    
-    CLI_KEY=(int.from_bytes(p1,"big"), int.from_bytes(p2,"big") )
+    conn.sendall( data )#send
 
-    return CLI_KEY
+
+    #second, wait for other end to send its key
+    p1=conn.recv(1024)
+    
+    data=bytehex_parser(p1.hex())
+    CLI_KEY=[]
+    while len(data)>0:
+            size=int(data.pop(0) ,16)#length of first hex data(8 bit)
+
+            string=''
+            for a in range(size//2):
+                string+=data.pop(0)
+
+            string= int(string,16)# turn encrypted hex to int
+            CLI_KEY.append(string)
+
+    return tuple( CLI_KEY )
     
 def init_info(text="SERVER\n"):
     print(text,"-"*40)

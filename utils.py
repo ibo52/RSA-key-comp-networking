@@ -1,5 +1,9 @@
+"""utilities to use over communication send/receive phases
+halil ibrahim MUT"""
+
 def int_to_hex(data:list):
-    """turn integers to hex strings with its hex length info before every hex"""
+    """turn integer list to hex string list with its hex length info before every hex.
+it prepares integers to be send as hex"""
     l=[]
     for a in data:
         hex_a=hex(a).replace("0x","")# remove hex marker from string(ex: 0xff->ff)
@@ -21,13 +25,14 @@ def int_to_hex(data:list):
     return l
 
 def bytearray_from_hex(data:list):
+    """turn hex array to bytearray. bytearrays can be send over internet"""
     l=bytearray()
     for a in data:
         l+=bytes.fromhex(a)
     return l
 
 def bytehex_parser(data:str):
-    """parse hex strings to hex string list"""
+    """parse hex string to list of hex strings as 8-bit each"""
     l=[]
     for a in range(0,len(data),2):
 
@@ -35,7 +40,7 @@ def bytehex_parser(data:str):
     return l
 
 def hex_to_int(data:str):
-    """return integer data of hex str"""
+    """turn hex strings to list of integers."""
     l=[]
     for a in range(0,len(data),2):
 

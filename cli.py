@@ -2,7 +2,7 @@ import socket
 from threading import Thread
 from RSA import *
 from utils import *
-
+"""Halil Ibrahim MUT"""
 
 server="127.0.0.1"#communication end, ip of those who you want to communicate
 port=65001      #listen port of ip,which port it is waiting for you
@@ -48,19 +48,30 @@ def sender(conn, SRV_KEY):
             exit(0)
 
 def cli_handshake(conn):
-    #wait for servers public key
+
+    #first,receive other end's key
     p1=conn.recv(1024)
-    p2=conn.recv(1024)
+    
+    data=bytehex_parser(p1.hex())
+    SRV_KEY=[]
+    while len(data)>0:
+            size=int(data.pop(0) ,16)#length of first hex data(8 bit)
 
-    #send your public key to other end, turn integers to bytes
-    #key int.to_bytes(bytes=1,byteorder=little/big endian)
-    conn.sendall( (PUBLIC_KEY[0]).to_bytes(2,"big") )
-    conn.sendall( (PUBLIC_KEY[1]).to_bytes(2,"big") )
+            string=''
+            for a in range(size//2):
+                string+=data.pop(0)
 
-    #interpret incoming bytes as integer
-    SRV_KEY=(int.from_bytes(p1,"big"), int.from_bytes(p2,"big") )
+            string= int(string,16)# turn encrypted hex to int
+            SRV_KEY.append(string)
 
-    return SRV_KEY
+    #second, send your public key to other end, turn integers to bytes
+    data=[x for x in PUBLIC_KEY]
+    data=bytearray_from_hex( int_to_hex(data) )
+    
+    conn.sendall( data )#send
+    
+    return tuple( SRV_KEY )
+
 def init_info(text="CLIENT\n"):
     print(text,"-"*40)
     print(f"PUBLIC:{PUBLIC_KEY}\nPRIVATE:{PRIVATE_KEY}")

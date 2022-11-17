@@ -1,8 +1,8 @@
 from math import sqrt
 from random import randint
-#
-#
-#
+#Halil
+#Ibrahim
+#MUT
 PRIVATE_KEY=None
 PUBLIC_KEY=None
 
@@ -90,7 +90,7 @@ def decrypt(message:list,key:tuple):
     return deciphered
 
 
-#init-declare required vals and functions
+#init-declare required vals and functions, Thus keys will be ready to use by module that calls
 P_NUMS=prime_find(220)[20:] #if not choose big primes, function wont work properly
 r1=P_NUMS.pop( randint(0,len(P_NUMS)-1 ) )#[ randint(0, len(P_NUMS)-1 ) ]
 r2=P_NUMS.pop( randint(0,len(P_NUMS)-1 ) )#[ randint(0, len(P_NUMS)-1 ) ]
