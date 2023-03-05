@@ -1,6 +1,29 @@
 """utilities to use over communication send/receive phases
 halil ibrahim MUT"""
 
+class Enigma:
+    @staticmethod
+    def encrypt(message:list,key:tuple):
+        "message^e mod n formula ciphers the ascii message"
+
+        ciphered=[]
+        for a in message:
+            ciphered.append( a**key[1] % key[0] )
+            
+        return ciphered
+
+    @staticmethod
+    def decrypt(message:list,key:tuple):
+        """as c represents encrypted_message: c^d mod n formula
+        decyphers the message by ascii table"""
+
+        deciphered=[]
+        for a in message:
+            deciphered.append( a**key[1] % key[0] )
+            
+        return deciphered
+
+#--------------------------------------------------------
 def int_to_hex(data:list):
     """turn integer list to hex string list with its hex length info before every hex.
 it prepares integers to be send as hex"""
@@ -53,19 +76,23 @@ def int_to_str(data:list):
     for a in data:
         string+=chr(a)
     return string
-
+#
+#
+#
 if __name__=="__main__":
-    a=bytearray("deneme","utf-8")
+    a=bytearray("sample message","utf-8")
     b=hex_to_int(a.hex())
 
     print("bytearray:",b,"\nstring:",int_to_str(b))
 
-    from RSA import *
-    print("public:",PUBLIC_KEY,"private:",PRIVATE_KEY)
+    from RSA import RSA
+    rsa=RSA()
+    
+    print("public:",rsa.PUBLIC_KEY,"private:",rsa.PRIVATE_KEY)
 
 
-    en=encrypt(a,PUBLIC_KEY)
-    de=decrypt(en,PRIVATE_KEY)
+    en=Enigma.encrypt(a,rsa.PUBLIC_KEY)
+    de=Enigma.decrypt(en,rsa.PRIVATE_KEY)
 
     print("original:",int_to_str(a),b)
     print("encrypted:",int_to_str(en),en)
@@ -78,13 +105,13 @@ if __name__=="__main__":
     en=bytehex_parser(a.hex())#hex deperlerini çıkar
     #en=bytearray_from_hex(en)
     
-    en=encrypt(a,PUBLIC_KEY)#şifrele
+    en=Enigma.encrypt(a,rsa.PUBLIC_KEY)#şifrele
     en=int_to_hex(en)#şifreli değeri hex string yap
     en=bytearray_from_hex(en)#hex string listesindekileri bytearraya çevir
                     #bytearrayı hex yap, inte çevir, decode et, yaz
     print(en)
     exit()
-    de=decrypt(en,PRIVATE_KEY)
+    de=Enigma.decrypt(en,rsa.PRIVATE_KEY)
 
     print("original:",int_to_str(a),b)
     print("encrypted:",int_to_str(en),en)
