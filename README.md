@@ -1,4 +1,4 @@
-# RSS algorithm implementation to create public-private key pairs
+# RSA algorithm implementation to create public-private key pairs
 ## note from advanced computer networks lecture
 ### references: powerpoint slides(ch:8, pg:21-29) of 'computer networking: a top down approach' 
 ***

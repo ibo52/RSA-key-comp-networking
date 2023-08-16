@@ -21,7 +21,7 @@ class CommunicationObject:
     def receiver(self,conn):
         while True:
             rc=conn.recv(1024) #wait for data
-            data=bytehex_parser( rc.hex() )#turn bytes to (8 bit each) hex list
+            data=DataManipulator.bytehex_parser( rc.hex() )#turn bytes to (8 bit each) hex list
 
             message=''
             while len(data)>0:
@@ -50,7 +50,7 @@ class CommunicationObject:
             data=Enigma.encrypt(data, self.REMOTE_KEY)
 
             #turn hex data to bytearray
-            data=bytearray_from_hex( int_to_hex(data) )
+            data=DataManipulator.hex_to_bytearray( DataManipulator.int_to_hex(data) )
             conn.sendall( data )
 
 

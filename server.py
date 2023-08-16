@@ -12,7 +12,7 @@ class Server(CommunicationObject):
     def handshake(self,conn):
         #fitst,send your public key to other end, turn integers to bytes
         data=[x for x in self.rsa_keys.PUBLIC_KEY]
-        data=bytearray_from_hex( int_to_hex(data) )
+        data=DataManipulator.hex_to_bytearray( DataManipulator.int_to_hex(data) )
 
         conn.sendall( data )#send
 
@@ -20,7 +20,7 @@ class Server(CommunicationObject):
         #second, wait for other end to send its key
         p1=conn.recv(1024)
 
-        data=bytehex_parser(p1.hex())
+        data= DataManipulator.bytehex_parser(p1.hex())
         CLI_KEY=[]
         while len(data)>0:
                 size=int(data.pop(0) ,16)#length of first hex data(8 bit)
